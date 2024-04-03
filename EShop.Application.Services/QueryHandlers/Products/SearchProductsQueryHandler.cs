@@ -20,8 +20,11 @@ public class SearchProductsQueryHandler(IUnitOfWork unitOfWork)
 {
     public async Task<ListDto<ProductShortDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
     {
-        ISpecification<Product, IProductSpecificationVisitor> specification =
-            new ProductByCategorySpecification(request.CategoryId);
+        ISpecification<Product, IProductSpecificationVisitor>? specification = null;
+
+        if (request.CategoryId.HasValue)
+            specification =
+                specification.AddToSpecification(new ProductByCategorySpecification(request.CategoryId.Value));
 
         if (request.Query != null)
             specification = specification.AddToSpecification(new ProductByNameSpecification(request.Query));
@@ -32,9 +35,10 @@ public class SearchProductsQueryHandler(IUnitOfWork unitOfWork)
 
         if (request.Attributes != null)
         {
-            foreach (var (key, value) in request.Attributes)
+            foreach (var attribute in request.Attributes)
             {
-                specification = specification.AddToSpecification(new ProductByAttributeSpecification(key, value));
+                specification = specification.AddToSpecification(
+                    new ProductByAttributeSpecification(attribute.Name, attribute.Values));
             }
         }
 

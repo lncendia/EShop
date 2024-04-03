@@ -20,13 +20,17 @@ public class ProductController(ISender sender) : ControllerBase
         return Map(product);
     }
 
-    [HttpGet]
-    public async Task<ListViewModel<ProductShortViewModel>> Get([FromQuery] SearchProductsInputModel model)
+    [HttpPost]
+    public async Task<ListViewModel<ProductShortViewModel>> Get(SearchProductsInputModel model)
     {
         var data = await sender.Send(new SearchProductsQuery
         {
             CategoryId = model.CategoryId,
-            Attributes = model.Attributes?.AsReadOnly(),
+            Attributes = model.Attributes?.Select(a=>new AttributeQuery
+            {
+                Name = a.Name!,
+                Values = a.Values!
+            }).ToArray(),
             MinPrice = model.MinPrice,
             MaxPrice = model.MaxPrice,
             Order = model.Order,
@@ -44,19 +48,19 @@ public class ProductController(ISender sender) : ControllerBase
         };
     }
 
-    private static ProductShortViewModel Map(ProductShortDto product) => new()
+    private ProductShortViewModel Map(ProductShortDto product) => new()
     {
         Id = product.Id,
-        PhotoUrl = product.PhotoUrl.ToString().Replace('\\', '/'),
+        PhotoUrl = $"{Request.Scheme}://{Request.Host}/{product.PhotoUrl.ToString().Replace('\\', '/')}",
         Name = product.Name,
         Price = product.Price,
         CountType = GetCountType(product.Count)
     };
     
-    private static ProductViewModel Map(ProductDto product) => new()
+    private ProductViewModel Map(ProductDto product) => new()
     {
         Id = product.Id,
-        PhotoUrl = product.PhotoUrl.ToString().Replace('\\', '/'),
+        PhotoUrl = $"{Request.Scheme}://{Request.Host}/{product.PhotoUrl.ToString().Replace('\\', '/')}",
         Name = product.Name,
         Price = product.Price,
         CountType = GetCountType(product.Count),

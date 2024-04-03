@@ -3,4 +3,4 @@ using MediatR;
 
 namespace EShop.Application.Abstractions.Queries.Categories;
 
-public class CategoriesQuery : IRequest<IReadOnlyCollection<CategoryDto>>;
+public class CategoriesQuery : IRequest<IReadOnlyCollection<CategoryShortDto>>;

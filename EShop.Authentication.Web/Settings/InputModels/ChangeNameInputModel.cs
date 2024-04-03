@@ -10,6 +10,6 @@ public class ChangeNameInputModel
     /// <summary>
     /// Получает или задает имя пользователя.
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public string? Username { get; init; }
 }

@@ -10,13 +10,13 @@ public class ConfirmChangeEmailInputModel
     /// <summary>
     /// Новая почта пользователя
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     [EmailAddress(ErrorMessage = "Укажите корректный адрес")]
     public string? NewEmail { get; init; }
     
     /// <summary>
     /// Код подтверждения
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public string? Code { get; init; }
 }

@@ -20,9 +20,9 @@ public class ProductVisitor : BaseVisitor<ProductModel, IProductSpecificationVis
         spec.Accept(visitor);
         return visitor.Expr!;
     }
-    
+
     public void Visit(ProductByAttributeSpecification specification) => Expr = x =>
-        x.Attributes.Any(a => a.Name == specification.Name && a.Value == specification.Value);
+        x.Attributes.Any(a => a.Name == specification.Name && specification.Values.Any(v => v == a.Value));
 
     public void Visit(ProductByPriceSpecification specification) =>
         Expr = x => x.Price >= specification.Min && x.Price <= specification.Max;

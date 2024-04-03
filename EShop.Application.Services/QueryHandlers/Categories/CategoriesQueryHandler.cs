@@ -8,17 +8,13 @@ using Microsoft.Extensions.Caching.Memory;
 namespace EShop.Application.Services.QueryHandlers.Categories;
 
 public class CategoriesQueryHandler(IUnitOfWork unitOfWork, IMemoryCache cache)
-    : IRequestHandler<CategoriesQuery, IReadOnlyCollection<CategoryDto>>
+    : IRequestHandler<CategoriesQuery, IReadOnlyCollection<CategoryShortDto>>
 {
-    public async Task<IReadOnlyCollection<CategoryDto>> Handle(CategoriesQuery request,
+    public async Task<IReadOnlyCollection<CategoryShortDto>> Handle(CategoriesQuery request,
         CancellationToken cancellationToken)
     {
         var categories = await cache.TryGetCategoriesFromCacheAsync(unitOfWork);
 
-        return categories.Select(c => new CategoryDto
-        {
-            Name = c.Name,
-            Attributes = c.Attributes.Select(a => new AttributeDto { Name = a.Name, Values = a.Values }).ToArray()
-        }).ToArray();
+        return categories.Select(c => new CategoryShortDto { Id = c.Id, Name = c.Name }).ToArray();
     }
 }

@@ -1,0 +1,11 @@
+.list {
+    top: 10px;
+    position: absolute;
+    z-index: 10;
+    background-color: var(--bs-body-bg);
+    padding: 20px 30px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 10px;
+    max-height: 300px;
+    overflow: auto;
+}

@@ -5,9 +5,10 @@ namespace EShop.Application.Web.Products.InputModels;
 
 public class SearchProductsInputModel
 {
-    [Required] public required Guid CategoryId { get; init; }
+    public Guid? CategoryId { get; init; }
+
     public string? Query { get; init; }
-    public IDictionary<string, string>? Attributes { get; init; }
+    public AttributeInputModel[]? Attributes { get; init; }
     public decimal? MinPrice { get; init; }
     public decimal? MaxPrice { get; init; }
 
@@ -15,4 +16,10 @@ public class SearchProductsInputModel
 
     [Range(1, 100)] public int CountPerPage { get; init; } = 15;
     [Range(1, int.MaxValue)] public int Page { get; init; } = 1;
+}
+
+public class AttributeInputModel
+{
+    [Required] public string? Name { get; init; }
+    [Required] public string[]? Values { get; init; }
 }

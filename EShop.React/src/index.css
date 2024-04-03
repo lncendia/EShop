@@ -1,0 +1,28 @@
+body {
+    min-height: 100vh;
+    padding-bottom: 100px;
+}
+
+body::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgba(var(--bs-body-bg-rgb), 1);
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--bs-orange);
+}
+
+@font-face {
+    font-family: "Morice-Bejar";
+    src: url("./fonts/Morice-Bejar.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "RobotoFlex";
+    src: url("./fonts/RobotoFlex.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Hero";
+    src: url("./fonts/Hero.ttf") format("truetype");
+}

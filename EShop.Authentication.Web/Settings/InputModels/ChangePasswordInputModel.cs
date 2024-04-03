@@ -10,12 +10,12 @@ public class ChangePasswordInputModel
     /// <summary>
     /// Старый пароль
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public string? OldPassword { get; init; }
 
     /// <summary>
     /// Новый пароль
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public string? NewPassword { get; init; }
 }

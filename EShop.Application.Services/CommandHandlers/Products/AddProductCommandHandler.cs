@@ -1,18 +1,22 @@
 ﻿using EShop.Application.Abstractions.Commands.Products;
 using EShop.Application.Abstractions.Exceptions;
 using EShop.Application.Abstractions.Photos;
+using EShop.Application.Services.Extensions;
 using EShop.Domain.Abstractions.Interfaces;
 using EShop.Domain.ProductAggregate;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EShop.Application.Services.CommandHandlers.Products;
 
-public class AddProductCommandHandler(IUnitOfWork unitOfWork, IPhotoStore store)
+public class AddProductCommandHandler(IUnitOfWork unitOfWork, IPhotoStore store, IMemoryCache cache)
     : IRequestHandler<AddProductCommand, Guid>
 {
     public async Task<Guid> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
-        var category = await unitOfWork.CategoryRepository.Value.GetAsync(request.CategoryId);
+        var categories = await cache.TryGetCategoriesFromCacheAsync(unitOfWork);
+
+        var category = categories.FirstOrDefault(c => c.Id == request.CategoryId);
         if (category == null) throw new CategoryNotFoundException();
 
         Uri? photo;

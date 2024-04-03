@@ -7,12 +7,12 @@ public class ConfirmEmailInputModel
     /// <summary>
     /// Логин (имя) пользователя
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public Guid UserId { get; init; }
 
     /// <summary>
     /// Код подтверждения
     /// </summary>
-    [Required(ErrorMessage = "Поле необходимо для заполнения")]
+    [Required(ErrorMessage = "Поле обязательно для заполнения")]
     public string? Code { get; init; }
 }
