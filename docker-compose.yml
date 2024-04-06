@@ -6,10 +6,15 @@
       POSTGRES_PASSWORD: "pgpassword"
     ports:
       - "5432:5432"
+    volumes:
+      - ./containers/app:/var/lib/postgresql/data
+    
   auth-postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: "pguser"
       POSTGRES_PASSWORD: "pgpassword"
+    volumes:
+      - ./containers/auth:/var/lib/postgresql/data
     ports:
       - "5433:5432"
