@@ -14,18 +14,18 @@ interface FilterModuleProps {
 const FilterModule = ({className, attributes, onChecked, onPriceChange, onReset}: FilterModuleProps) => {
 
     return (
-        <Row className={`${className} gy-2`.trim()}>
-            <Col xs={2}>
+        <Row className={`${className} gy-2`}>
+            <Col sm={6} lg={4} xl={3}>
                 <PriceSelectModule onChange={onPriceChange}/>
             </Col>
             {attributes.map(a => {
                 return (
-                    <Col key={a.name} xs={2}>
+                    <Col key={a.name} sm={6} lg={4} xl={3}>
                         <AttributeSelectModule onChecked={onChecked} attribute={a}/>
                     </Col>
                 )
             })}
-            <Col xs={2}>
+            <Col sm={6} lg={4} xl={3}>
                 <Button variant="danger" className="w-100" onClick={onReset}>Сбросить</Button>
             </Col>
         </Row>

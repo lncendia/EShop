@@ -1,3 +1,4 @@
+using EShop.Authentication.Abstractions.DTOs;
 using MediatR;
 
 namespace EShop.Authentication.Abstractions.Commands.Create;
@@ -5,7 +6,7 @@ namespace EShop.Authentication.Abstractions.Commands.Create;
 /// <summary>
 /// Команда для создания пользователя.
 /// </summary>
-public class CreateUserCommand : IRequest<string>
+public class CreateUserCommand : IRequest<Tokens>
 {
     /// <summary>
     /// Получает или задает пароль пользователя.

@@ -1,7 +1,8 @@
 using EShop.Authentication.Abstractions.Commands.Authentication;
+using EShop.Authentication.Abstractions.DTOs;
 using EShop.Authentication.Abstractions.Exceptions;
-using EShop.Authentication.Abstractions.JwtGenerator;
 using EShop.Authentication.Abstractions.Models;
+using EShop.Authentication.Abstractions.TokenProvider;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,7 +15,7 @@ namespace EShop.Authentication.Services.Commands.Authentication;
 public class RefreshTokenCommandHandler(
     UserManager<User> userManager,
     IUserClaimsPrincipalFactory<User> factory,
-    IJwtGenerator generator) : IRequestHandler<RefreshTokenCommand, string>
+    ITokenProvider provider) : IRequestHandler<RefreshTokenCommand, Tokens>
 {
     /// <summary>
     /// Обработка команды обновления токена.
@@ -23,16 +24,28 @@ public class RefreshTokenCommandHandler(
     /// <param name="cancellationToken">Токен отмены для асинхронной операции.</param>
     /// <returns>Объект пользователя в случае успешной аутентификации.</returns>
     /// <exception cref="UserNotFoundException">Вызывается, если пользователь не найден.</exception>
-    public async Task<string> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<Tokens> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
+        var token = provider.DecryptRefresh(request.Token);
+
+        if (token.Expiration < DateTime.Now) throw new RefreshTokenExpiredException();
+        
         // Получаем пользователя по его электронной почте.
-        var user = await userManager.FindByIdAsync(request.UserId.ToString());
+        var user = await userManager.FindByIdAsync(token.Id.ToString());
 
         // Если пользователь не найден, вызываем исключение UserNotFoundException.
         if (user == null) throw new UserNotFoundException();
         
         var principal = await factory.CreateAsync(user);
 
-        return await generator.GenerateAsync(principal.Claims);
+        var accessToken = provider.GenerateAccess(principal.Claims);
+        var refresh = provider.GenerateRefresh(user.Id);
+
+        return new Tokens
+        {
+            AccessToken = accessToken,
+            RefreshToken = refresh.token,
+            RefreshTokenExpiration = refresh.expiration
+        };
     }
 }

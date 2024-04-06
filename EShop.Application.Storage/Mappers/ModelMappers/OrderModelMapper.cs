@@ -56,6 +56,11 @@ internal class OrderModelMapper(ApplicationDbContext context) : IModelMapperUnit
                 Count = eh.Count
             });
 
+        foreach (var value in model.OrderItems)
+        {
+            value.Count = aggregate.OrderItems.First(i => i.Id == value.ProductId).Count;
+        }
+
         model.OrderItems.AddRange(orderItemsToAdd);
     }
 }

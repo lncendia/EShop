@@ -1,0 +1,30 @@
+.element {
+    display: flex;
+    justify-content: start;
+    border-bottom: 1px solid rgba(var(--bs-body-color-rgb), 0.7);
+    text-decoration: none;
+    cursor: pointer;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.category {
+    color: rgba(var(--bs-body-color-rgb), 0.5);
+    font-size: 12px;
+}
+
+.price {
+    color: rgba(var(--bs-body-color-rgb), 0.7);
+    font-size: 14px;
+}
+
+.poster {
+    border-radius: 5px;
+    width: 80px;
+    height: 85px;
+    margin-right: 7px;
+}

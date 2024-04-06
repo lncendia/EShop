@@ -35,11 +35,16 @@ internal class UserModelMapper(ApplicationDbContext context) : IModelMapperUnit<
 
     private static void ProcessShoppingCart(User aggregate, UserModel model)
     {
-        model.ShoppingCart.RemoveAll(uh => aggregate.ShoppingCart.All(eh => eh != uh.ProductId));
+        model.ShoppingCart.RemoveAll(uh => aggregate.ShoppingCart.All(eh => eh.Id != uh.ProductId));
 
         var shoppingCartToAdd = aggregate.ShoppingCart
-            .Where(eh => model.ShoppingCart.All(uh => uh.ProductId != eh))
-            .Select(eh => new ShoppingCartItemModel { ProductId = eh });
+            .Where(eh => model.ShoppingCart.All(uh => uh.ProductId != eh.Id))
+            .Select(eh => new ShoppingCartItemModel { ProductId = eh.Id, Count = eh.Count });
+
+        foreach (var value in model.ShoppingCart)
+        {
+            value.Count = aggregate.ShoppingCart.First(i => i.Id == value.ProductId).Count;
+        }
 
         model.ShoppingCart.AddRange(shoppingCartToAdd);
     }

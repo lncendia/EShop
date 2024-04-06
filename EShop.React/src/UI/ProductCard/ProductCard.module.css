@@ -1,0 +1,22 @@
+.photo {
+    max-height: 300px;
+    width: 260px;
+    border-radius: 14px;
+    box-shadow: var(--bs-box-shadow);
+}
+
+.description {
+    color: rgba(var(--bs-body-color-rgb), 0.9);
+    font-size: 15px;
+}
+
+.title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.category {
+    color: rgba(var(--bs-body-color-rgb), 0.8);
+    font-size: 14px;
+}

@@ -1,52 +1,43 @@
 import {Container} from "inversify";
-import {AuthService} from "../services/AuthService/AuthService.ts";
-import {ProductsService} from "../services/FilmsService/ProductsService.ts";
-import axios from "axios";
-import {IAuthService} from "../services/AuthService/IAuthService.ts";
-import {IProductsService} from "../services/FilmsService/IProductsService.ts";
+import {AccountService} from "../services/AccountService/AccountService.ts";
+import {ProductsService} from "../services/ProductsService/ProductsService.ts";
+import axios, {AxiosInstance} from "axios";
+import {IAccountService} from "../services/AccountService/IAccountService.ts";
+import {IProductsService} from "../services/ProductsService/IProductsService.ts";
 import {ICategoriesService} from "../services/CategoriesService/ICategoriesService.ts";
 import {CategoriesService} from "../services/CategoriesService/CategoriesService.ts";
-
-
-// const config: UserManagerSettings = {
-//
-//     // URL-адрес OpenID Connect провайдера
-//     authority: "https://localhost:10001",
-//
-//     // Идентификатор клиента
-//     client_id: "overoom_react",
-//
-//     // URI перенаправления после успешной аутентификации
-//     redirect_uri: "https://localhost:5173/signin-oidc",
-//
-//     // Тип ответа при аутентификации
-//     response_type: "code",
-//
-//     // Запрашиваемые области доступа
-//     scope: "openid profile roles Films Rooms",
-//
-//     // URI перенаправления после выхода из системы
-//     post_logout_redirect_uri: "https://localhost:5173/signout-oidc",
-//
-//     // Флаг автоматического тихого обновления токена доступа
-//     automaticSilentRenew: true,
-//
-//     // URI перенаправления для тихого обновления токена доступа
-//     silent_redirect_uri: "https://localhost:5173/signin-silent-oidc",
-//
-//     // Хранилище состояния пользователя
-//     userStore: new WebStorageStateStore({store: localStorage}),
-// };
+import {IRegistrationService} from "../services/RegistrationService/IRegistrationService.ts";
+import {RegistrationService} from "../services/RegistrationService/RegistrationService.ts";
+import {IProfileService} from "../services/ProfileService/IProfileService.ts";
+import {ProfileService} from "../services/ProfileService/ProfileService.ts";
 
 // Создаем контейнер
 const container = new Container();
 
 const axiosInstance = axios.create({
-    baseURL: 'https://localhost:7193/api/'
+    baseURL: 'https://localhost:7193',
+    paramsSerializer: params => {
+        return Object.entries(params)
+            .map(([key, value]) => {
+                if (Array.isArray(value)) {
+                    return value.map(v => `${key}=${encodeURIComponent(v)}`).join('&');
+                }
+                return `${key}=${encodeURIComponent(value)}`;
+            })
+            .join('&');
+    },
 });
 
-container.bind<IAuthService>('AuthService')
-    .to(AuthService)
+container.bind<AxiosInstance>('AxiosInstance')
+    .toDynamicValue(() => axiosInstance)
+    .inSingletonScope();
+
+container.bind<IAccountService>('AccountService')
+    .toDynamicValue(() => new AccountService(axiosInstance))
+    .inSingletonScope();
+
+container.bind<IRegistrationService>('RegistrationService')
+    .toDynamicValue(() => new RegistrationService(axiosInstance))
     .inSingletonScope();
 
 container.bind<IProductsService>('ProductsService')
@@ -57,17 +48,8 @@ container.bind<ICategoriesService>('CategoriesService')
     .toDynamicValue(() => new CategoriesService(axiosInstance))
     .inSingletonScope();
 
-// configureAxiosAuthorization(axiosInstance, container)
+container.bind<IProfileService>('ProfileService')
+    .toDynamicValue(() => new ProfileService(axiosInstance))
+    .inSingletonScope();
 
 export default container;
-
-// function configureAxiosAuthorization(axiosInstance: AxiosInstance, container: Container): void {
-//     axiosInstance.interceptors.request.use(async config => {
-//         const userManager = container.get<UserManager>('UserManager');
-//         const user = await userManager.getUser();
-//         if (user && user.access_token) {
-//             config.headers.Authorization = `Bearer ${user.access_token}`;
-//         }
-//         return config;
-//     });
-// }

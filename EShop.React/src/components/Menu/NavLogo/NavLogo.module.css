@@ -1,6 +1,8 @@
 .text {
     font-family: "Hero", "Arial", sans-serif;
     --bs-navbar-brand-color: var(--bs-white);
+    --bs-navbar-brand-hover-color: var(--bs-white);
     --bs-navbar-brand-font-size: 25px;
     font-weight: bold;
+    cursor: pointer;
 }

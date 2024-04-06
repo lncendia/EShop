@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using EShop.Application.Storage.Mappers.Abstractions;
-using EShop.Application.Storage.Mappers.StaticMethods;
 using EShop.Application.Storage.Models.User;
 using EShop.Domain.UserAggregate;
+using EShop.Domain.UserAggregate.ValueObjects;
 
 namespace EShop.Application.Storage.Mappers.AggregateMappers;
 
@@ -19,20 +19,18 @@ internal class UserMapper : IAggregateMapperUnit<User, UserModel>
 
     public User Map(UserModel model)
     {
-        var user = new User();
+        var user = new User(model.Id);
 
         var favorites = model.Favorites
             .Select(x => x.ProductId)
             .ToList();
 
         var shoppingCart = model.ShoppingCart
-            .Select(x => x.ProductId)
+            .Select(i => new ShoppingCartItem { Count = i.Count, Id = i.ProductId })
             .ToList();
 
         ShoppingCart.SetValue(user, shoppingCart);
         Favorites.SetValue(user, favorites);
-
-        IdFields.AggregateId.SetValue(user, model.Id);
 
         return user;
     }

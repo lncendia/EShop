@@ -9,8 +9,10 @@ namespace EShop.Domain.ProductAggregate;
 public class Product : AggregateRoot
 {
     private const int MaxNameLength = 50;
+    private const int MaxDescriptionLength = 500;
 
     private string _name = null!;
+    private string _description = null!;
     private decimal _cost;
     private int _count;
 
@@ -30,6 +32,12 @@ public class Product : AggregateRoot
 
     public Guid CategoryId { get; }
 
+    public required string Description
+    {
+        get => _description;
+        set => _description = value.ValidateLength(MaxDescriptionLength);
+    }
+
     public required string Name
     {
         get => _name;
@@ -41,7 +49,7 @@ public class Product : AggregateRoot
         get => _cost;
         set
         {
-            if (value <= 0) throw new IncorrectProductPriceException();
+            if (value <= 0) throw new ArgumentException("Price must be grater then zero");
             _cost = value;
         }
     }
@@ -51,7 +59,7 @@ public class Product : AggregateRoot
         get => _count;
         set
         {
-            if (value <= 0) throw new IncorrectProductCountException();
+            if (value < 0) throw new ArgumentException("Price must be grater or equal zero");
             _count = value;
         }
     }

@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
-import AttributeItem from "../../../components/Products/AttributeItem/AttributeItem.tsx";
-import ValuesList from "../../../components/Products/ValuesList/ValuesList.tsx";
+import AttributeItem from "../../../components/Catalog/AttributeItem/AttributeItem.tsx";
+import ValuesList from "../../../components/Catalog/ValuesList/ValuesList.tsx";
 import {AttributeOption} from "./AttributeSelectOption.ts";
 
 interface AttributeSelectModuleProps {

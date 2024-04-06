@@ -1,5 +1,5 @@
 import {BadgeOption} from "./BadgeOption.ts";
-import BadgesList from "../../../components/Products/BadgesList/BadgesList.tsx";
+import BadgesList from "../../../components/Catalog/BadgesList/BadgesList.tsx";
 
 interface BadgesModuleProps {
     badges: BadgeOption[],

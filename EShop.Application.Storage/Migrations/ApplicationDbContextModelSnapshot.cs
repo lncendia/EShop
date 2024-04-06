@@ -174,6 +174,11 @@ namespace EShop.Application.Storage.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -215,6 +220,9 @@ namespace EShop.Application.Storage.Migrations
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId", "ProductId");
 

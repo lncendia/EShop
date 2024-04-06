@@ -14,7 +14,7 @@ export class CategoriesService implements ICategoriesService {
     public async get(id: string): Promise<Category> {
 
         // Отправка запроса к серверу для получения списка фильмов
-        const response = await this.axiosInstance.get<Category>(`category/${id}`);
+        const response = await this.axiosInstance.get<Category>(`api/category/${id}`);
 
         // Возвращаем данные
         return response.data
@@ -23,7 +23,7 @@ export class CategoriesService implements ICategoriesService {
     public async getAll(): Promise<CategoryShort[]> {
 
         // Отправка запроса к серверу для получения списка фильмов
-        const response = await this.axiosInstance.get<CategoryShort[]>(`category`);
+        const response = await this.axiosInstance.get<CategoryShort[]>(`api/category`);
 
         // Возвращаем данные
         return response.data

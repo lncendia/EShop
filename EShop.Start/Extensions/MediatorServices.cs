@@ -18,7 +18,7 @@ public static class MediatorServices
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(typeof(SearchProductsQueryHandler).Assembly);
-            // configuration.RegisterServicesFromAssembly(typeof(RecoverPasswordCommandHandler).Assembly);
+            configuration.RegisterServicesFromAssembly(typeof(RecoverPasswordCommandHandler).Assembly);
         });
     }
 }

@@ -1,3 +1,4 @@
+using EShop.Authentication.Abstractions.DTOs;
 using MediatR;
 
 namespace EShop.Authentication.Abstractions.Commands.Authentication;
@@ -5,10 +6,10 @@ namespace EShop.Authentication.Abstractions.Commands.Authentication;
 /// <summary>
 /// Команда для обновления токена.
 /// </summary>
-public class RefreshTokenCommand : IRequest<string>
+public class RefreshTokenCommand : IRequest<Tokens>
 {
     /// <summary>
-    /// Получает или задает идентификатор пользователя.
+    /// Получает или задает токен обновления.
     /// </summary>
-    public required Guid UserId { get; init; }
+    public required string Token { get; init; }
 }

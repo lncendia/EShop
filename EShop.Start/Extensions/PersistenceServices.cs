@@ -2,7 +2,7 @@ using EShop.Application.Abstractions.Photos;
 using EShop.Application.Storage;
 using EShop.Application.Storage.Context;
 using EShop.Application.Storage.Photos;
-using EShop.Authentication.Storage.DbContexts;
+using EShop.Authentication.Infrastructure.DbContexts;
 using EShop.Domain.Abstractions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

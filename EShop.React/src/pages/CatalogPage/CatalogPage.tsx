@@ -22,6 +22,9 @@ const CatalogPage = () => {
     const categoryService = useInjection<ICategoriesService>('CategoriesService');
 
     useEffect(() => {
+        setCategory(undefined);
+        setAttributes([]);
+        setPrice([]);
         if (!state?.id) return
         categoryService.get(state.id).then(c => {
             setCategory(c)
@@ -40,21 +43,11 @@ const CatalogPage = () => {
     }, [state]);
 
     const handleCheck = useCallback((attribute: string, value: string, checked: boolean) => {
-        setAttributes(prevState => {
-            return prevState.map(p => {
-                if (p.name != attribute) return p
-                return {
-                    name: p.name,
-                    values: p.values.map(v => {
-                        if (v.value != value) return v
-                        return {
-                            ...v,
-                            checked: checked
-                        }
-                    })
-                }
-            })
-        })
+        setAttributes(prevState => prevState.map(p =>
+            p.name === attribute
+                ? {...p, values: p.values.map(v => v.value === value ? {...v, checked} : v)}
+                : p
+        ));
     }, []);
 
     const handleChangePrice = useCallback((min?: number, max?: number) => {
@@ -62,20 +55,11 @@ const CatalogPage = () => {
     }, []);
 
     const handleReset = useCallback(() => {
-        setAttributes(prevState => {
-            return prevState.map(p => {
-                return {
-                    name: p.name,
-                    values: p.values.map(v => {
-                        return {
-                            ...v,
-                            checked: false
-                        }
-                    })
-                }
-            })
-        })
-        setPrice([])
+        setAttributes(prevState => prevState.map(p => ({
+            name: p.name,
+            values: p.values.map(v => ({...v, checked: false}))
+        })));
+        setPrice([]);
     }, []);
 
     const attributesQuery = useMemo(() => {
@@ -92,7 +76,8 @@ const CatalogPage = () => {
 
     return (
         <>
-            <FilterModule className="mt-4" attributes={attributes} onChecked={handleCheck} onPriceChange={handleChangePrice}
+            <FilterModule className="mt-4" attributes={attributes} onChecked={handleCheck}
+                          onPriceChange={handleChangePrice}
                           onReset={handleReset}/>
             <BadgesModule badges={attributesQuery}
                           onRemove={(attribute, value) => handleCheck(attribute, value, false)}/>

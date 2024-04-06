@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.Authentication.Servic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{BEAB7EF0-5A5D-4250-918B-27B7D6FAA997}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.Authentication.Storage", "EShop.Authentication.Storage\EShop.Authentication.Storage.csproj", "{9D4A442A-7A10-4CE4-AC48-36DC9C32953D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.Authentication.Infrastructure", "EShop.Authentication.Infrastructure\EShop.Authentication.Infrastructure.csproj", "{9D4A442A-7A10-4CE4-AC48-36DC9C32953D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.Application.Storage", "EShop.Application.Storage\EShop.Application.Storage.csproj", "{A8DBBFE9-A3F2-4AF2-A883-553BB629FBC3}"
 EndProject

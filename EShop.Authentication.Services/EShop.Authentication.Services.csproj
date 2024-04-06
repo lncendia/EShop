@@ -8,5 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EShop.Authentication.Abstractions\EShop.Authentication.Abstractions.csproj" />
+      <ProjectReference Include="..\EShop.IntegrationEvents\EShop.IntegrationEvents.csproj" />
     </ItemGroup>
 </Project>

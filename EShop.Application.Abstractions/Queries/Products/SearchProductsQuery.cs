@@ -4,8 +4,9 @@ using MediatR;
 
 namespace EShop.Application.Abstractions.Queries.Products;
 
-public class SearchProductsQuery : IRequest<ListDto<ProductShortDto>>
+public class SearchProductsQuery : IRequest<ListDto<ProductDto>>
 {
+    public Guid? UserId { get; init; }
     public Guid? CategoryId { get; init; }
     public string? Query { get; init; }
     public AttributeQuery[]? Attributes { get; init; }

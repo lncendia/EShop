@@ -23,12 +23,28 @@
       <ProjectReference Include="..\EShop.Application.Web\EShop.Application.Web.csproj" />
       <ProjectReference Include="..\EShop.Authentication.Abstractions\EShop.Authentication.Abstractions.csproj" />
       <ProjectReference Include="..\EShop.Authentication.Services\EShop.Authentication.Services.csproj" />
-      <ProjectReference Include="..\EShop.Authentication.Storage\EShop.Authentication.Storage.csproj" />
+      <ProjectReference Include="..\EShop.Authentication.Infrastructure\EShop.Authentication.Infrastructure.csproj" />
       <ProjectReference Include="..\EShop.Authentication.Web\EShop.Authentication.Web.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\img\photos\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Initializers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Initializers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Initializers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Initializers\**" />
     </ItemGroup>
 
 </Project>

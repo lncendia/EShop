@@ -1,4 +1,3 @@
-using EShop.Application.Storage.DatabaseInitialization;
 using EShop.Start.Extensions;
 using EShop.Start.Middlewares;
 
@@ -9,6 +8,14 @@ builder.Services.AddMemoryCache();
 builder.Services.AddCorsServices();
 
 builder.Services.AddMediatorServices();
+
+builder.Services.AddTokenProvider(builder.Configuration);
+
+builder.Services.AddAspIdentity();
+
+builder.Services.AddEmailServices(builder.Configuration);
+
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // Добавление служб для хранилища
 builder.Services.AddPersistenceServices(builder.Configuration, builder.Environment.WebRootPath);
@@ -30,7 +37,10 @@ await using var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     // Инициализация начальных данных в базу данных
-    await DatabaseInitializer.InitAsync(scope.ServiceProvider);
+    await EShop.Application.Storage.DatabaseInitialization.DatabaseInitializer.InitAsync(scope.ServiceProvider);
+
+    await EShop.Authentication.Infrastructure.DatabaseInitialization.DatabaseInitializer.InitAsync(
+        scope.ServiceProvider);
 }
 
 // Добавляем мидлварь обработки ошибок
@@ -44,7 +54,6 @@ app.UseSwaggerUI(c =>
 {
     // Настройте Swagger UI для использования OAuth2
     c.OAuthClientId("swagger");
-    c.OAuthUsePkce(); // Используйте PKCE (Proof Key for Code Exchange) с авторизационным кодом
 });
 
 app.UseStaticFiles();

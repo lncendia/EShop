@@ -1,6 +1,7 @@
 body {
     min-height: 100vh;
     padding-bottom: 100px;
+    background-color: var(--bs-body-bg-paper) !important;
 }
 
 body::-webkit-scrollbar {
@@ -9,7 +10,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-    background: var(--bs-orange);
+    background: var(--bs-secondary);
 }
 
 @font-face {
@@ -25,4 +26,12 @@ body::-webkit-scrollbar-thumb {
 @font-face {
     font-family: "Hero";
     src: url("./fonts/Hero.ttf") format("truetype");
+}
+
+[data-bs-theme="light"] {
+    --bs-body-bg: rgb(255, 255, 255);
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-body-bg-paper: rgb(247, 247, 247);
+    --bs-body-bg-paper-rgb: rgb(247, 247, 247);
+    --bs-body-font-family: "RobotoFlex", "Arial", sans-serif;
 }

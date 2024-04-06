@@ -31,13 +31,14 @@ public class AddProductCommandHandler(IUnitOfWork unitOfWork, IPhotoStore store,
                 PhotoUrl = photo,
                 Name = request.Name,
                 Price = request.Price,
+                Description = request.Description
             };
 
             await unitOfWork.ProductRepository.Value.AddAsync(product);
             await unitOfWork.SaveChangesAsync();
             return product.Id;
         }
-        catch(Exception)
+        catch (Exception)
         {
             await store.DeleteAsync(photo);
             throw;

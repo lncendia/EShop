@@ -1,8 +1,9 @@
 ﻿using EShop.Authentication.Abstractions.Commands.Authentication;
 using EShop.Authentication.Abstractions.Commands.Password;
+using EShop.Authentication.Abstractions.DTOs;
 using EShop.Authentication.Web.Account.InputModels;
+using EShop.Authentication.Web.Common.ViewModels;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EShop.Authentication.Web.Account.Controllers;
@@ -18,26 +19,29 @@ public class AccountController(ISender mediator) : ControllerBase
     /// Обработка аутентификации
     /// </summary>
     /// <param name="model">Модель входа в систему</param>
-    [HttpGet]
-    public async Task<string> Token([FromQuery] LoginInputModel model)
+    [HttpPost]
+    public async Task<TokensViewModel> Token(LoginInputModel model)
     {
         // Попытка аутентификации пользователя с использованием введенных учетных данных.
-        return await mediator.Send(new AuthenticateUserByPasswordCommand
+        var tokens = await mediator.Send(new AuthenticateUserByPasswordCommand
         {
             Email = model.Email!,
             Password = model.Password!
         });
+
+        return Map(tokens);
     }
 
     /// <summary>
     /// Обновление токена
     /// </summary>
-    [Authorize]
-    [HttpPost]
-    public async Task<string> RefreshToken()
+    [HttpGet]
+    public async Task<TokensViewModel> RefreshToken(string refreshToken)
     {
         // Попытка аутентификации пользователя с использованием введенных учетных данных.
-        return await mediator.Send(new RefreshTokenCommand { UserId = User.Id() });
+        var tokens = await mediator.Send(new RefreshTokenCommand { Token = refreshToken});
+
+        return Map(tokens);
     }
 
     /// <summary>
@@ -45,7 +49,7 @@ public class AccountController(ISender mediator) : ControllerBase
     /// </summary>
     /// <param name="model">Модель ввода для сброса пароля.</param>
     [HttpPost]
-    public async Task RecoverPassword(ResetPasswordInputModel model)
+    public async Task RecoverPassword(RecoverPasswordInputModel model)
     {
         // Отправляем команду на смену пароля
         await mediator.Send(new RequestRecoverPasswordCommand
@@ -82,4 +86,11 @@ public class AccountController(ISender mediator) : ControllerBase
         // Перенаправляем пользователя на страницу входа и устанавливаем returnUrl
         return Ok();
     }
+
+    private static TokensViewModel Map(Tokens tokens) => new()
+    {
+        AccessToken = tokens.AccessToken,
+        RefreshToken = tokens.RefreshToken,
+        RefreshTokenExpiration = tokens.RefreshTokenExpiration
+    };
 }

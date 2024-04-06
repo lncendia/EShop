@@ -9,4 +9,5 @@ public interface IProductSpecificationVisitor : ISpecificationVisitor<IProductSp
     void Visit(ProductByNameSpecification specification);
     void Visit(ProductsInStockSpecification specification);
     void Visit(ProductByCategorySpecification specification);
+    void Visit(ProductByIdsSpecification specification);
 }

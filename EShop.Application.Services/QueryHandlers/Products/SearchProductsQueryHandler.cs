@@ -2,6 +2,7 @@
 using EShop.Application.Abstractions.DTOs.Products;
 using EShop.Application.Abstractions.Queries.Products;
 using EShop.Application.Services.Extensions;
+using EShop.Application.Services.Mappers;
 using EShop.Domain.Abstractions.Interfaces;
 using EShop.Domain.Ordering;
 using EShop.Domain.Ordering.Abstractions;
@@ -11,14 +12,16 @@ using EShop.Domain.ProductAggregate.Ordering.Visitor;
 using EShop.Domain.ProductAggregate.Specifications;
 using EShop.Domain.ProductAggregate.Specifications.Visitor;
 using EShop.Domain.Specifications.Abstractions;
+using EShop.Domain.UserAggregate;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EShop.Application.Services.QueryHandlers.Products;
 
-public class SearchProductsQueryHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<SearchProductsQuery, ListDto<ProductShortDto>>
+public class SearchProductsQueryHandler(IUnitOfWork unitOfWork, IMemoryCache cache)
+    : IRequestHandler<SearchProductsQuery, ListDto<ProductDto>>
 {
-    public async Task<ListDto<ProductShortDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
+    public async Task<ListDto<ProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
     {
         ISpecification<Product, IProductSpecificationVisitor>? specification = null;
 
@@ -55,19 +58,15 @@ public class SearchProductsQueryHandler(IUnitOfWork unitOfWork)
         var products =
             await unitOfWork.ProductRepository.Value.FindAsync(specification, order, request.Skip, request.Take);
 
-        return new ListDto<ProductShortDto>
+        var categories = await cache.TryGetCategoriesFromCacheAsync(unitOfWork);
+        
+        User? user = null;
+        if (request.UserId.HasValue) user = await unitOfWork.UserRepository.Value.GetAsync(request.UserId.Value);
+        
+        return new ListDto<ProductDto>
         {
-            List = products.Select(Map).ToArray(),
+            List = products.Select(p => ProductMapper.Map(p, categories.First(c => c.Id == p.CategoryId), user)).ToArray(),
             TotalCount = await unitOfWork.ProductRepository.Value.CountAsync(specification)
         };
     }
-
-    private static ProductShortDto Map(Product product) => new()
-    {
-        Id = product.Id,
-        PhotoUrl = product.PhotoUrl,
-        Name = product.Name,
-        Price = product.Price,
-        Count = product.Count
-    };
 }

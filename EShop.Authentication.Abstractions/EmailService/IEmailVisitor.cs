@@ -24,16 +24,4 @@ public interface IEmailVisitor
     /// </summary>
     /// <param name="email">Объект ConfirmMailChangeEmail.</param>
     void Visit(ConfirmMailChangeEmail email);
-
-    /// <summary>
-    /// Посещает TwoFactorCodeEmail.
-    /// </summary>
-    /// <param name="email">Объект TwoFactorCodeEmail.</param>
-    void Visit(TwoFactorCodeEmail email);
-    
-    ///// <summary>
-    ///// Посещает TwoFactorCodeEmail.
-    ///// </summary>
-    ///// <param name="email">Объект TwoFactorCodeEmail.</param>
-    //void Visit(TwoFactorResetCodeEmail email);
 }

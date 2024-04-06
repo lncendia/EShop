@@ -1,5 +1,6 @@
 ﻿using EShop.Authentication.Abstractions.Commands.Create;
 using EShop.Authentication.Abstractions.Commands.Email;
+using EShop.Authentication.Web.Common.ViewModels;
 using EShop.Authentication.Web.Registration.InputModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +21,10 @@ public class RegistrationController(ISender mediator) : ControllerBase
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     [HttpPost]
-    public async Task<string> Registration(RegistrationInputModel model)
+    public async Task<TokensViewModel> Registration(RegistrationInputModel model)
     {
         // Отправляем команду на создание пользователя
-        return await mediator.Send(new CreateUserCommand
+        var tokens = await mediator.Send(new CreateUserCommand
         {
             // Почта
             Email = model.Email!,
@@ -37,6 +38,13 @@ public class RegistrationController(ISender mediator) : ControllerBase
             // Имя пользователя
             Username = model.Username
         });
+        
+        return new TokensViewModel
+        {
+            AccessToken = tokens.AccessToken,
+            RefreshToken = tokens.RefreshToken,
+            RefreshTokenExpiration = tokens.RefreshTokenExpiration
+        };
     }
 
     /// <summary>

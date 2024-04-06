@@ -34,4 +34,6 @@ public class ProductVisitor : BaseVisitor<ProductModel, IProductSpecificationVis
 
     public void Visit(ProductByCategorySpecification specification) =>
         Expr = x => x.CategoryId == specification.CategoryId;
+
+    public void Visit(ProductByIdsSpecification specification) => Expr = x => specification.Ids.Contains(x.Id);
 }

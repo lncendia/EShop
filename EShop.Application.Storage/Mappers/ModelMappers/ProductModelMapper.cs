@@ -20,6 +20,7 @@ internal class ProductModelMapper(ApplicationDbContext context) : IModelMapperUn
         model.Count = aggregate.Count;
         model.CategoryId = aggregate.CategoryId;
         model.PhotoUrl = aggregate.PhotoUrl;
+        model.Description = aggregate.Description;
 
         ProcessAttributes(aggregate, model);
 
@@ -29,7 +30,7 @@ internal class ProductModelMapper(ApplicationDbContext context) : IModelMapperUn
     private static void ProcessAttributes(Product aggregate, ProductModel model)
     {
         model.Attributes.RemoveAll(x => aggregate.Attributes.All(m => m.Key != x.Name));
-        
+
         var newAttributes = aggregate.Attributes
             .Where(x => model.Attributes.All(m => m.Name != x.Key))
             .Select(x => new AttributeModel
@@ -37,7 +38,7 @@ internal class ProductModelMapper(ApplicationDbContext context) : IModelMapperUn
                 Name = x.Key,
                 Value = x.Value,
             });
-        
+
         model.Attributes.AddRange(newAttributes);
     }
 }

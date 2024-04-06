@@ -1,6 +1,6 @@
 import {Outlet} from "react-router-dom";
-import Container from "../../UI/Container/Container.tsx";
 import NavbarModule from "../../modules/Home/NavbarModule/NavbarModule.tsx";
+import {Container} from "react-bootstrap";
 
 // Общая страница с шаблоном для всех остальных страниц
 const LayoutPage = () => {

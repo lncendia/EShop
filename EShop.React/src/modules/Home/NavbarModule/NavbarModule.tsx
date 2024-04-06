@@ -4,36 +4,26 @@ import {useInjection} from "inversify-react";
 import {useCallback, useEffect, useState} from "react";
 import {CategoryItem} from "../../../components/Menu/Navbar/CategoryItem.ts";
 import {useNavigate} from "react-router-dom";
+import {IProductsService} from "../../../services/ProductsService/IProductsService.ts";
+import {Product} from "../../../services/ProductsService/Models/Products.ts";
+import {useUser} from "../../../contexts/UserContext/UserContext.tsx";
+import {ProductElementData} from "../../../components/Menu/ProductSearchElement/ProductElementData.ts";
 
 const NavbarModule = () => {
 
-    // const [films, setFilms] = useState<FilmShort[]>([]);
-    // const filmService = useInjection<IProductsService>('FilmsService');
-    // const authService = useInjection<IAuthService>('AuthService');
-    // const {authorizedUser} = useUser()
-    //
-    //
-    // const onFilmSearch = useCallback(async (value: string) => {
-    //     if (value === '') setFilms([])
-    //     else {
-    //         const filmsResponse = await filmService.search({query: value})
-    //         setFilms(filmsResponse.films)
-    //     }
-    // }, [filmService])
-    //
-    //
-    // const onLogout = useCallback(authService.signOut.bind(authService), [authService])
-    // const onLogin = useCallback(authService.signIn.bind(authService), [authService])
-    // const onCatalog = useCallback(() => navigate('/catalog'), [navigate])
-    // const onPlaylists = useCallback(() => navigate('/playlists'), [navigate])
-    // const onRooms = useCallback(() => navigate('/filmRooms'), [navigate])
-    // const onYouTube = useCallback(() => navigate('/youtube'), [navigate])
-    // const onProfile = useCallback(() => navigate('/profile'), [navigate])
-    // const onHome = useCallback(() => navigate('/'), [navigate])
-    //
-    // const onFilm = useCallback((film: FilmShort) => {
-    //     navigate('/film', {state: {id: film.id}})
-    // }, [navigate])
+    const [products, setProducts] = useState<Product[]>([]);
+    const productsService = useInjection<IProductsService>('ProductsService');
+    const {authorizedUser, setTokens} = useUser()
+
+
+    const onSearch = useCallback(async (value: string) => {
+        if (value === '') setProducts([])
+        else {
+            const products = await productsService.search({query: value})
+            setProducts(products.list)
+        }
+    }, [productsService])
+
 
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const categoryService = useInjection<ICategoriesService>('CategoriesService');
@@ -49,8 +39,29 @@ const NavbarModule = () => {
         navigate('/catalog', {state: {id: item.id}})
     }, [navigate])
 
+    const onHome = useCallback(() => navigate('/'), [navigate])
+
+    const onCatalog = useCallback(() => navigate('/catalog'), [navigate])
+
+    const onLogin = useCallback(() => navigate('/signIn'), [navigate])
+
+    const onCompare = useCallback(() => navigate('/compare'), [navigate])
+
+    const onFavorite = useCallback(() => navigate('/favorite'), [navigate])
+
+    const onCart = useCallback(() => navigate('/cart'), [navigate])
+
+    const onLogout = useCallback(() => setTokens(undefined), [setTokens])
+
+    const onSelect = useCallback((product: ProductElementData) => {
+        navigate('/product', {state: {id: product.id}})
+    }, [navigate])
+
+
     return (
-        <Navbar categories={categories} onCategorySelect={onCategorySelect}/>
+        <Navbar name={authorizedUser?.name} categories={categories} products={products} onSearch={onSearch}
+                onCatalog={onCatalog} onCategorySelect={onCategorySelect} onHome={onHome} onLogin={onLogin}
+                onLogout={onLogout} onCompare={onCompare} onProduct={onSelect} onFavorite={onFavorite} onCart={onCart}/>
     );
 };
 

@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react';
-import AttributeItem from "../../../components/Products/AttributeItem/AttributeItem.tsx";
+import AttributeItem from "../../../components/Catalog/AttributeItem/AttributeItem.tsx";
 import PriceForm from "./PriceForm.tsx";
 import {number} from "yup";
 

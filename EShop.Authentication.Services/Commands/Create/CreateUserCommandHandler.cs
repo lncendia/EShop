@@ -1,9 +1,11 @@
 using EShop.Authentication.Abstractions.Commands.Create;
+using EShop.Authentication.Abstractions.DTOs;
 using EShop.Authentication.Abstractions.EmailService;
 using EShop.Authentication.Abstractions.EmailService.Structs;
 using EShop.Authentication.Abstractions.Exceptions;
-using EShop.Authentication.Abstractions.JwtGenerator;
 using EShop.Authentication.Abstractions.Models;
+using EShop.Authentication.Abstractions.TokenProvider;
+using EShop.IntegrationEvents;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,8 +20,9 @@ public class CreateUserCommandHandler(
     UserManager<User> userManager,
     IEmailService emailService,
     IUserClaimsPrincipalFactory<User> factory,
-    IJwtGenerator generator)
-    : IRequestHandler<CreateUserCommand, string>
+    ITokenProvider provider,
+    IPublisher publisher)
+    : IRequestHandler<CreateUserCommand, Tokens>
 {
     /// <summary>
     /// Метод обработки команды создания пользователя.
@@ -30,7 +33,7 @@ public class CreateUserCommandHandler(
     /// <exception cref="EmailAlreadyTakenException">Вызывается, если пользователь уже существует.</exception>
     /// <exception cref="EmailFormatException">Вызывается, если почта имеет неверный формат.</exception>
     /// <exception cref="PasswordValidationException">Вызывается, если валидация пароля не прошла.</exception>
-    public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Tokens> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         // Создание нового объекта пользователя на основе данных из запроса.
         var user = new User
@@ -76,7 +79,22 @@ public class CreateUserCommandHandler(
 
         var principal = await factory.CreateAsync(user);
 
-        return await generator.GenerateAsync(principal.Claims);
+        var accessToken = provider.GenerateAccess(principal.Claims);
+        var refresh = provider.GenerateRefresh(user.Id);
+
+        await publisher.Publish(new UserCreatedIntegrationEvent
+        {
+            Id = user.Id,
+            Username = user.UserName,
+            Email = user.Email
+        }, cancellationToken);
+
+        return new Tokens
+        {
+            AccessToken = accessToken,
+            RefreshToken = refresh.token,
+            RefreshTokenExpiration = refresh.expiration
+        };
     }
 
     /// <summary>

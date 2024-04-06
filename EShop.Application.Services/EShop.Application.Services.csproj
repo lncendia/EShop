@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EShop.Application.Abstractions\EShop.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\EShop.IntegrationEvents\EShop.IntegrationEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>

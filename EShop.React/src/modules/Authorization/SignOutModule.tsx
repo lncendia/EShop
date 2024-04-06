@@ -1,14 +1,14 @@
 import {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useInjection} from 'inversify-react';
-import {IAuthService} from "../../services/AuthService/IAuthService.ts";
+import {IAccountService} from "../../services/AccountService/IAccountService.ts";
 
 // Модуль выхода из аккаунта
 const SignOutModule = () => {
 
     // Навигационный хук
     const navigate = useNavigate();
-    const authService = useInjection<IAuthService>('AuthService');
+    const authService = useInjection<IAccountService>('AuthService');
 
     // Используем эффект
     useEffect(() => {
